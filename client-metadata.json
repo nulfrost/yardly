@@ -1,0 +1,15 @@
+{
+  "client_id": "https://yardly.sale/client-metadata.json",
+  "client_uri": "https://yardly.sale",
+  "redirect_uris": [
+    "https://yardly.sale/oauth/callback",
+    "http://localhost:3000/oauth/callback"
+  ],
+  "application_type": "web",
+  "client_name": "Yardly - Online Yard Sale",
+  "dpop_bound_access_tokens": true,
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code"],
+  "scope": "atproto transition:chat.bsky transition:generic",
+  "token_endpoint_auth_method": "none"
+}
