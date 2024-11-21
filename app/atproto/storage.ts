@@ -16,6 +16,16 @@ export class StateStore implements NodeSavedStateStore {
       .from(authStateTable)
       .where(eq(authStateTable.key, key));
     if (!result.length) return;
-    return result[0].state as unknown as NodeSavedState;
+    return JSON.parse(result[0].state) as NodeSavedState;
+  }
+  async set(key: string, value: NodeSavedState) {
+    const state = JSON.stringify(value);
+    await this.db
+      .insert(authStateTable)
+      .values({ key, state })
+      .onConflictDoUpdate({ target: authStateTable.state, set: { state } });
+  }
+  async del(key: string) {
+    await this.db.delete(authStateTable).where(eq(authStateTable.key, key));
   }
 }
