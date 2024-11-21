@@ -29,3 +29,28 @@ export class StateStore implements NodeSavedStateStore {
     await this.db.delete(authStateTable).where(eq(authStateTable.key, key));
   }
 }
+
+export class SessionStore implements NodeSavedSessionStore {
+  constructor(private db: Database) {}
+  async get(key: string): Promise<NodeSavedSession | undefined> {
+    const result = await this.db
+      .select()
+      .from(authSessionTable)
+      .where(eq(authSessionTable.key, key));
+    if (!result.length) return;
+    return JSON.parse(result[0].session) as NodeSavedSession;
+  }
+  async set(key: string, value: NodeSavedSession) {
+    const session = JSON.stringify(value);
+    await this.db
+      .insert(authSessionTable)
+      .values({ key, session })
+      .onConflictDoUpdate({
+        target: authSessionTable.session,
+        set: { session },
+      });
+  }
+  async del(key: string) {
+    await this.db.delete(authSessionTable).where(eq(authSessionTable.key, key));
+  }
+}
